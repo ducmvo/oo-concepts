@@ -1,0 +1,8 @@
+mycs
+.vs
+bin
+obj
+*.pdf
+.idea
+cmake-build-debug
+*.out
