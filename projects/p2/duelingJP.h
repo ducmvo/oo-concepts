@@ -35,7 +35,7 @@ class duelingJP {
     // j4 produces 3527 for down() and j3 produces 3527 for up().
 
 public:
-    duelingJP(int);
+    duelingJP(int, int[]);
     // Constructor
     // precondition:
     // postcondition:
@@ -65,11 +65,24 @@ public:
     // precondition:
     // postcondition:
 
+    int getCollisions() const;
+    int getInversions() const;
+
 private:
-    jumpPrime* group;
+    jumpPrime** group;
+    int* values;
+    int* ups;
+    int* downs;
     int size;
+
     int inversions;
     int collisions;
+    void setInversions();
+    void setCollisions();
+    void voidSource(duelingJP &);
+    void moveSource(duelingJP &);
+    void copySource(const duelingJP &);
+    void createDueling(int, int[]);
 
 
 };

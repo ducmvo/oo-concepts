@@ -8,8 +8,10 @@
 // Output:
 
 #include <iostream>
-#include "jumpPrime.h"
-
+#include <memory>
+#include <stdlib.h>
+#include <vector>
+#include "duelingJP.h"
 using namespace std;
 
 int sampleFunc(void*);
@@ -19,17 +21,52 @@ int sampleFunc(void*);
 // OUT:
 
 int main() {
-    jumpPrime jp(64376);
+    vector<shared_ptr<duelingJP>> list;
+    vector<unique_ptr<duelingJP>> list2;
+    int SIZE = 5;
 
-    while (jp.isActive()) {
-        jp.up();
+    for (int i = 0; i < SIZE; i++) {
+        int size = rand() % 10 + 5;
+        int nums[size];
+        for (int j = 0; j < size; j++) {
+            nums[j] = rand() % 50 + 1000;
+            cout << nums[j] << " | ";
+        }
+        cout << endl;
+        shared_ptr<duelingJP> ptr(new duelingJP(size, nums));
+        list.push_back(ptr);
     }
-    jp.revive();
-    cout << jp.up() << " | " << jp.isDead() << endl;
-    jp.revive();
 
-    cout << jp.up() << " | " << jp.isDead() << endl;
-    cout << jp.up() << " | " << jp.isActive() << endl;
+    for (shared_ptr<duelingJP> jp : list) {
+        cout <<"INVERSIONS " <<jp->getInversions() << " | ";
+        cout <<"COLLISIONS " <<jp->getCollisions() << endl;
+    }
+
+
+    for (int i = 0; i < SIZE; i++) {
+        cout << "SIZE " << list.size() << endl;
+        list.pop_back();
+    }
+
+    cout << "TEST MOVE SEMANTIC WITH UNIQUE POINTER" << endl;
+    for (int i = 0; i < 5; i++) {
+        int size = rand() % 10 + 5;
+        int nums[size];
+        for (int j = 0; j < size; j++) {
+            nums[j] = rand() % 50 + 1000;
+            cout << nums[j] << " | ";
+        }
+        cout << endl;
+        unique_ptr<duelingJP> ptr(new duelingJP(size, nums));
+        list2.push_back(move(ptr));
+    }
+
+    for (int i = 0; i < list2.size(); i++) {
+        cout <<"INVERSIONS " <<list2[i]->getInversions() << " | ";
+        cout <<"COLLISIONS " <<list2[i]->getCollisions() << endl;
+    }
+
+
 
     return 0;
 }

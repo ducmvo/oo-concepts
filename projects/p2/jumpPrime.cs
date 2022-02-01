@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 // Author:      Duc Vo
 // Filename:    jumpPrime.cs
@@ -20,7 +20,7 @@ namespace project1
         //   If not, 1000 will be used
         //
         // States:
-        //  active: if true, any query return valid prime. return -1 of false
+        //  active: if true, any query return valid prime. return -1 of false 
         //  dead: the object is permanently inactive and cannot be revive
         //  An object cannot be dead and active
         //
@@ -49,7 +49,7 @@ namespace project1
         private bool dead;
         // Maximum number that have an upper prime that an integer can hold
         private const int MAX_NUM = 2147483647;
-        // Default minimum value
+        // Default minimum value 
         private const int MIN_NUM = 1000;
 
 
@@ -60,11 +60,11 @@ namespace project1
 
         // Constructor
         //     Initialize object states with default values.
-        //
+        // 
         // preconditions:
         //     input number is greater than 1000.
         //     input number is less than 2147483647
-        // postconditions:
+        // postconditions:    
         //      if input number is not in range 1000 -> 2147483647 inclusive
         //      1000 will be used as default
         public jumpPrime(int num = MIN_NUM)
@@ -82,7 +82,7 @@ namespace project1
 
         // Revive and inactive object.
         // The object becomes dead if revive in an active state
-        // Return the operation status:
+        // Return the operation status: 
         //    True if successfully revive, false otherwise
         public bool revive()
         {
@@ -92,7 +92,7 @@ namespace project1
                 jCount = 0;
                 qCount = 0;
             }
-            active = !active;
+            active = !active;       
             return active;
         }
 
@@ -132,7 +132,7 @@ namespace project1
 
         // Increase query count then do the following operations:
         //     1. Check if current value is out of range to reset to 1000
-        //     2. If query count > max queries, increase jump count,
+        //     2. If query count > max queries, increase jump count, 
         //        reset query count set value to the current upperPrime + 1 and
         //        call setPrimes method to update the primes and maxQueries
         //     3. Set object to inactive if jump count > MAX_JUMP
@@ -156,7 +156,7 @@ namespace project1
                 setPrimes();
             }
 
-            if (jCount > MAX_JUMPS)
+            if (jCount > MAX_JUMPS) 
                 active = false;
 
             return true;
@@ -186,7 +186,7 @@ namespace project1
         // than the encapsulated value
         private int getUpperPrime()
         {
-
+           
             int num = value + 1;
             while (!checkPrime(num))
             {
