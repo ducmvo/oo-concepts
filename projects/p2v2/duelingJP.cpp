@@ -42,16 +42,12 @@ const duelingJP &duelingJP::operator=(duelingJP &&src){
 int duelingJP::query(bool isCollision) const {
     int count = 0;
     for (int i = 0; i < size - 1; i++) {
-        if (!group[i].isActive())
-            group[i].revive();
+        if (!group[i].isActive()) group[i].revive();
         int up = group[i].up();
         for (int j = i + 1; j < size; j++) {
-            if (!group[j].isActive())
-                group[j].revive();
-            if ((isCollision && up == group[j].up())
-                || (!isCollision && up == group[j].down())) {
-                count++;
-            }
+            if (!group[j].isActive()) group[j].revive();
+            if (isCollision && up == group[j].up()) count++;
+            if (!isCollision && up == group[j].down()) count++;
         }
     }
     return count;
