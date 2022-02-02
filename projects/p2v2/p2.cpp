@@ -4,104 +4,107 @@
 // Version:     1.0
 // Description: This program tests the duelingJP class
 // Input:       none
-// Process:     Create a list of jumpPrime objects that used to create
-//              duelingJP objects. The program tests all the public methods
-//              of duellingJP classes and finish without error.
+// Process:     Create arrays of integer values to instantiate duelingJP objects.
+//              The program create containers of smart pointers to hold a variety
+//              of duelingJP objects and tests all of its public methods
 // Output:      none
 
 #include <iostream>
 #include <memory>
-
 #include <vector>
 #include <stdio.h>
 #include "duelingJP.h"
 using namespace std;
+
+void generateValues(int[], int, int, int);
+// Description: this program tests the duelingJP class
+// Input:       array of integer, size of the array, minimum and maximum values
+// Process:     generate and array of random integer values with input size within
+//              the provided minimum and maximum values
+// Modify:      the input array
+// Output:      none
+
+int main() {
+
+    const int SIZE = 10;
+    const int MIN = 1000;
+    const int MAX = 1040;
+    int values[SIZE];
+
+    printf("\n=== Welcome to duelingJP testing driver ====\n");
+
+    // Create containers for smart pointers
+    vector<unique_ptr<duelingJP>> uv;
+    vector<shared_ptr<duelingJP>> sv;
+
+    // Create Shared pointers
+    generateValues(values, SIZE, MIN, MAX);
+    shared_ptr<duelingJP> sharePtr(new duelingJP(SIZE, values));
+
+    generateValues(values, SIZE, MIN, MAX);
+    shared_ptr<duelingJP> sharePtr1(new duelingJP(SIZE, values));
+
+    // Create unique pointers
+    generateValues(values, SIZE, MIN, MAX);
+    unique_ptr<duelingJP> ptr1(new duelingJP(SIZE, values));
+
+    generateValues(values, SIZE, MIN, MAX);
+    unique_ptr<duelingJP> ptr2(new duelingJP(SIZE, values));
+
+    generateValues(values, SIZE, MIN, MAX);
+    unique_ptr<duelingJP> ptr3(new duelingJP(SIZE, values));
+
+    // Test duelingJP objects
+    printf("\n=== TEST CONSTRUCTOR ===\n");
+    generateValues(values, SIZE, MIN, MAX);
+    duelingJP djp(SIZE, values);
+    printf("  CREATED OBJECT STATS\n");
+    cout << "    collisions " << djp.getCollisions() << endl;
+    cout << "    inversions " << djp.getInversions() << endl;
+
+    printf("\n=== TEST COPY OBJECT ===\n");
+    printf(" 1. Using shared pointer\n");
+    shared_ptr<duelingJP> copiedSharedPtr(new duelingJP(*sharePtr));
+    printf(" 2. Using copy constructor directly\n");
+    duelingJP djp2(*copiedSharedPtr);
+    printf(" 3. Using copy constructor with = operator\n");
+    duelingJP djp3 = *sharePtr;
+    printf(" 4. Using copy overloaded = operator\n");
+    sv.push_back(sharePtr);
+    *sv[0] = *copiedSharedPtr;
+
+    printf("\n=== TEST MOVE SEMANTICS ===\n");
+    printf(" 1. Move into container\n");
+    uv.push_back(move(ptr1)); // move inside container
+    printf("    Object stats inside container\n");
+    cout << "    collisions " << uv[0]->getCollisions() << endl;
+    cout << "    inversions " << uv[0]->getInversions() << endl;
+
+    printf(" 2. MOVE OUT CONTAINER\n");
+    ptr1 = move(uv[uv.size()-1]); // move outside container
+    printf("    Object stats outside container\n");
+    cout << "    collisions " << ptr1->getCollisions() << endl;
+    cout << "    inversions " << ptr1->getInversions() << endl;
+
+    printf(" 3. Using move constructor directly\n");
+    duelingJP djp4(move(*ptr2));
+    printf(" 4. Using move constructor with = operator\n");
+    duelingJP djp5 = move(djp4);
+    printf(" 5. Using move overloaded = operator\n");
+    uv[0] = move(ptr3);
+
+    printf("    Object stats inside container\n");
+    cout << "    collisions " << uv[0]->getCollisions() << endl;
+    cout << "    inversions " << uv[0]->getInversions() << endl;
+
+    printf("\n=== Thank you for using duelingJP testing driver ====\n");
+
+    return 0;
+}
 
 void generateValues(int values[], int size, int min, int max) {
     for (int i = 0; i < size; i++) {
         int value = rand() % (max - min + 1) + min;
         values[i] = value;
     }
-
-}
-
-int main() {
-    const int size = 10;
-    int MIN = 1000;
-    int MAX = 1040;
-
-    const int SIZE = 10;
-    int values[SIZE];
-
-
-    vector<unique_ptr<duelingJP>> uv;
-    vector<shared_ptr<duelingJP>> sv;
-
-    generateValues(values, SIZE, MIN, MAX);
-    shared_ptr<duelingJP> ptr(new duelingJP(size, values));
-
-    generateValues(values, SIZE, MIN, MAX);
-    unique_ptr<duelingJP> ptr1(new duelingJP(size, values));
-
-    generateValues(values, SIZE, MIN, MAX);
-    unique_ptr<duelingJP> ptr2(new duelingJP(size, values));
-
-    generateValues(values, SIZE, MIN, MAX);
-    unique_ptr<duelingJP> ptr3(new duelingJP(size, values));
-
-
-
-    printf("\nTEST CONSTRUCTOR");
-    duelingJP djp(size, values);
-
-    printf("\nTEST COPY CONSTRUCTOR");
-    printf("\n  TEST 1 USING STL CONTAINER");
-    sv.push_back(ptr);
-    sv.pop_back();
-    shared_ptr<duelingJP> copiedSharedPtr = ptr;
-    printf("\n  TEST 2 USING DIRECT COPY CONSTRUCTOR");
-    duelingJP djp2(*copiedSharedPtr);
-    printf("\n  TEST 3 USING COPY CONSTRUCTOR WITH = SIGN");
-    duelingJP djp3 = *ptr;
-
-    printf("\nTEST COPY OVERLOADED = OPERATOR");
-    djp3 = djp2;
-
-
-    printf("\nTEST MOVE CONSTRUCTOR");
-    printf("\n  TEST USING STL CONTAINER");
-    printf("\n  TEST MOVE IN STL CONTAINER");
-    uv.push_back(move(ptr1)); // move inside container
-    printf("\n  TEST MOVE OUT STL CONTAINER");
-    ptr1 = move(uv[uv.size()-1]);
-    printf("\n  TEST 2 USING DIRECT MOVE CONSTRUCTOR");
-    duelingJP djp4(move(*ptr1)); // move outside container
-    uv.pop_back();
-    printf("\n  TEST 3 USING MOVE CONSTRUCTOR WITH = SIGN");
-    duelingJP djp5 = move(djp4);
-
-    printf("\nTEST MOVE OVERLOADED = OPERATOR\n");
-    djp4 = move(djp5);
-
-    printf("\nTEST COLLISIONS CALL");
-    cout << "\nCOLLISIONS " << djp4.getCollisions() << endl;
-    printf("\nTEST INVERSIONS CALL");
-    cout << "\nINVERSIONS " << djp4.getInversions() << endl;
-
-    printf("\nTEST COPY OBJECTS WITH DIFFERENT SIZES");
-    printf("\nCREATE DIFFERENT SIZE JUMP PRIMES LIST\n");
-
-    const int SIZE2 = 15;
-
-    shared_ptr<duelingJP> sharedPtr2(new duelingJP(SIZE2, values));
-    printf("  TEST 1 USING DIRECT COPY CONSTRUCTOR:\n");
-    duelingJP djp6(*sharedPtr2);
-    printf("  TEST 2 USING COPY CONSTRUCTOR WITH = SIGN\n");
-    duelingJP djp7 = *sharedPtr2;
-    printf("\nTEST COLLISIONS CALL");
-    cout << "\nCOLLISIONS " << djp7.getCollisions() << endl;
-    printf("\nTEST INVERSIONS CALL");
-    cout << "\nINVERSIONS " << djp7.getInversions() << endl;
-
-    return 0;
 }

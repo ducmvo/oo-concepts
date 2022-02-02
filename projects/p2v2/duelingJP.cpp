@@ -2,12 +2,12 @@
 // Filename:    duelingJP.cpp
 // Date:        January 28, 2022,
 // Version:     1.0
-// Description:
+// Description: Implementation for duelingJP class used to
+//              encapsulate and manage some number of distinct jumpPrime sub-objects
+//              and answer client queries of ‘collisions’ and ‘inversions’.
 
-#include <iostream>
 #include "duelingJP.h"
 #include "jumpPrime.h"
-using namespace std;
 
 duelingJP::duelingJP(int size, int values[]) {
     createDueling(size, values);
@@ -22,8 +22,10 @@ duelingJP::duelingJP(const duelingJP &src) {
 }
 
 const duelingJP &duelingJP::operator=(const duelingJP &src) {
-    copySource(src);
-    return *this;
+    if (this != &src) {
+        copySource(src);
+        return *this;
+    }
 }
 
 duelingJP::duelingJP(duelingJP &&src){
@@ -31,8 +33,10 @@ duelingJP::duelingJP(duelingJP &&src){
 }
 
 const duelingJP &duelingJP::operator=(duelingJP &&src){
-    moveSource(src);
-    return *this;
+    if (this != &src) {
+        moveSource(src);
+        return *this;
+    }
 }
 
 int duelingJP::getCollisions() const {
