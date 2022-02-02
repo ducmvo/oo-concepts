@@ -24,8 +24,8 @@ duelingJP::duelingJP(const duelingJP &src) {
 const duelingJP &duelingJP::operator=(const duelingJP &src) {
     if (this != &src) {
         copySource(src);
-        return *this;
     }
+    return *this;
 }
 
 duelingJP::duelingJP(duelingJP &&src){
@@ -35,8 +35,8 @@ duelingJP::duelingJP(duelingJP &&src){
 const duelingJP &duelingJP::operator=(duelingJP &&src){
     if (this != &src) {
         moveSource(src);
-        return *this;
     }
+    return *this;
 }
 
 int duelingJP::getCollisions() const {
