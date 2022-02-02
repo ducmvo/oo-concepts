@@ -39,7 +39,7 @@ const duelingJP &duelingJP::operator=(duelingJP &&src){
     return *this;
 }
 
-int duelingJP::getCollisions() const {
+int duelingJP::query(bool isCollision) const {
     int count = 0;
     for (int i = 0; i < size - 1; i++) {
         if (!group[i].isActive())
@@ -48,7 +48,8 @@ int duelingJP::getCollisions() const {
         for (int j = i + 1; j < size; j++) {
             if (!group[j].isActive())
                 group[j].revive();
-            if (up == group[j].up()) {
+            if ((isCollision && up == group[j].up())
+                || (!isCollision && up == group[j].down())) {
                 count++;
             }
         }
@@ -56,21 +57,12 @@ int duelingJP::getCollisions() const {
     return count;
 }
 
+int duelingJP::getCollisions() const {
+    return query(true);
+}
+
 int duelingJP::getInversions() const {
-    int count = 0;
-    for (int i = 0; i < size; i++) {
-        if (!group[i].isActive())
-            group[i].revive();
-        int up = group[i].up();
-        for (int j = 1; j < size; j++) {
-            if (!group[j].isActive())
-                group[j].revive();
-            if ( i != j && up == group[j].down()) {
-                count++;
-            }
-        }
-    }
-    return count;
+    return query(false);
 }
 
 void duelingJP::createDueling(int size, int values[]) {

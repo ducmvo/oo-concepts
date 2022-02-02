@@ -86,6 +86,11 @@ private:
     // Create a new duelingJP object
     // precondition: input size must be greater than 0
     // postcondition: new duelingJP encapsulated numbers random jumpPrime objects
+
+    int query(bool) const;
+    // Helper function for get collisions and get inversions
+    // precondition: input true if query collisions, false if query inversions
+    // postcondition: return the number of collisions or inversions
 };
 
 
