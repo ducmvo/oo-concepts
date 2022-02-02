@@ -9,8 +9,8 @@
 #include "jumpPrime.h"
 using namespace std;
 
-duelingJP::duelingJP(int size) {
-    createDueling(size);
+duelingJP::duelingJP(int size, int values[]) {
+    createDueling(size, values);
 }
 
 duelingJP::~duelingJP() {
@@ -37,16 +37,16 @@ const duelingJP &duelingJP::operator=(duelingJP &&src){
 
 int duelingJP::getCollisions() const {
     int count = 0;
-    for (int i = 0; i < size; i++) {
-        for (int j = 1; j < size; j++) {
-//            if (!group[i].isActive()) group[i].revive();
-//            if (!group[j].isActive()) group[j].revive();
-            if (i < j && group[i].up() == group[j].up()) {
+    for (int i = 0; i < size - 1; i++) {
+        if (!group[i].isActive())
+            group[i].revive();
+        int up = group[i].up();
+        for (int j = i + 1; j < size; j++) {
+            if (!group[j].isActive())
+                group[j].revive();
+            if (up == group[j].up()) {
                 count++;
             }
-
-            group[i].reset();
-            group[j].reset();
         }
     }
     return count;
@@ -55,31 +55,25 @@ int duelingJP::getCollisions() const {
 int duelingJP::getInversions() const {
     int count = 0;
     for (int i = 0; i < size; i++) {
-
-    }
-    for (int i = 0; i < size; i++) {
+        if (!group[i].isActive())
+            group[i].revive();
+        int up = group[i].up();
         for (int j = 1; j < size; j++) {
-//            if (!group[i].isActive()) group[i].revive();
-//            if (!group[j].isActive()) group[j].revive();
-            if ( i != j && group[i].up() == group[j].down()) {
+            if (!group[j].isActive())
+                group[j].revive();
+            if ( i != j && up == group[j].down()) {
                 count++;
             }
-
-            group[i].reset();
-            group[j].reset();
         }
     }
     return count;
 }
 
-void duelingJP::createDueling(int size) {
-    int MIN = 1000;
-    int MAX = 1040;
+void duelingJP::createDueling(int size, int values[]) {
     this->size = size;
     group = new jumpPrime[size];
     for (int i = 0; i < size; i++) {
-        int value = rand() % (MAX - MIN + 1) + MIN;
-        jumpPrime jp(value);
+        jumpPrime jp(values[i]);
         group[i] = jp;
     }
 }

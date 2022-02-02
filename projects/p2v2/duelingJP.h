@@ -33,7 +33,7 @@ class duelingJP {
     // the cardinality of jumpPrime sub-objects varies across duelingJP objects.
 
 public:
-    duelingJP(int);
+    duelingJP(int, int[]);
     // Constructor
     // precondition:
     // postcondition:
@@ -88,7 +88,7 @@ private:
     // precondition: source object ref is not equal to the copy object ref
     // postcondition: source object data copied to new duelingJP instance
 
-    void createDueling(int);
+    void createDueling(int, int[]);
     // Create a new duelingJP object
     // precondition: input size must be greater than 0
     // postcondition: new duelingJP encapsulated numbers random jumpPrime objects
