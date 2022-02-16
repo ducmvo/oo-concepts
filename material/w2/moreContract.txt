@@ -1,0 +1,31 @@
+More on Programming by Contract
+Programming by Contract – assumes client consistently tracks object state and hence will invoke only appropriate operations
+
+            Preconditions
+
+                        To ensure function operates correctly, identify legal state(s) of object
+
+            Postconditions
+
+                        Identifies any change(s) in object state after function execution
+
+            Class invariants
+
+                        identify relationships or salient details about data members that are of interest to both client and class designer
+
+            Interface invariants
+
+                        Enumerate restrictions on use or application of objects
+
+            Implementation invariants
+
+                        Record design decisions, choices made in implementation, relationships or state conditions needed for consistency
+
+ 
+
+assumptions about arguments and object state
+remove need for internal (class-based) testing
+permits skipping of external (application) testing
+reasonable with serial or chained requests
+efficient
+risky, dependent on client fulfilling contract

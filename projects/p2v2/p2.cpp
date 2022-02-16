@@ -39,20 +39,20 @@ int main() {
 
     // Create Shared pointers
     generateValues(values, SIZE, MIN, MAX);
-    shared_ptr<duelingJP> sharePtr(new duelingJP(SIZE, values));
+    shared_ptr<duelingJP> sharePtr = make_shared<duelingJP>(SIZE, values);
 
     generateValues(values, SIZE, MIN, MAX);
-    shared_ptr<duelingJP> sharePtr1(new duelingJP(SIZE, values));
+    shared_ptr<duelingJP> sharePtr1 = make_shared<duelingJP>(SIZE, values);
 
     // Create unique pointers
     generateValues(values, SIZE, MIN, MAX);
-    unique_ptr<duelingJP> ptr1(new duelingJP(SIZE, values));
+    unique_ptr<duelingJP> ptr1 = make_unique<duelingJP>(SIZE, values);
 
     generateValues(values, SIZE, MIN, MAX);
-    unique_ptr<duelingJP> ptr2(new duelingJP(SIZE, values));
+    unique_ptr<duelingJP> ptr2 = make_unique<duelingJP>(SIZE, values);
 
     generateValues(values, SIZE, MIN, MAX);
-    unique_ptr<duelingJP> ptr3(new duelingJP(SIZE, values));
+    unique_ptr<duelingJP> ptr3 = make_unique<duelingJP>(SIZE, values);
 
     // Test duelingJP objects
     printf("\n=== TEST CONSTRUCTOR ===\n");

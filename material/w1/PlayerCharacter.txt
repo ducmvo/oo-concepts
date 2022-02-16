@@ -1,0 +1,278 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+// Author:      Zean Rivera
+// Filename:    PlayerCharacter.cs
+// Version:     Version 1
+// Description: An example class that represents
+//              a "Player Character" in a game. It can
+//              deal damage, take damage, heal, and
+//              have status effects (including being alive or dead). 
+// 
+// This Class File is meant to help convey good documentation,
+// and how to document:
+//     Preconditions
+//     Postconditions
+//     Interface Invariants
+//     Implementation Invariants
+//     Class Invariants
+namespace RPG_EXAMPLE
+{
+    class PlayerCharacter
+    {
+	// Class Invariant: This is a player character to be used in a game.
+	//  It can deal damage, take damage and heal. The character may be dead or alive.
+	//  Healthpoints is always less than or equal to maxHealthPoints.
+	//  An object cannot be both DEAD and ALIVE
+  	
+        // The current health of the Object.
+        private int healthPoints;
+        // The maximum health of the Object.
+        private int maxHealthPoints;
+        // The attack power of the Object.
+        private int attack;
+        // The defense power of the Object.
+        private int defense;
+        // The State of the Object.
+        private STATUS state;
+
+        // The minimum effective defense the Object has
+        // when defending against an attack.
+        public const int MIN_EFFECTIVE_DEFENSE = 1;
+        // The minimum outgoing damage an Object deals
+        // when it successfully deals damage (i.e. not DEAD or STUNNED).
+        public const int MIN_OUTGOING_DAMAGE = 1;
+
+        // States:
+        // The possible states of the Object.
+        // ALIVE = The Object is alive and able to keep fighting.
+        // 
+        // DEAD = The Object is dead and cannot fight.
+        // 
+        // STUNNED = The Object cannot fight.
+        // 
+        // WEAKENED = The Object deals half damage.
+        // 
+        // EMPOWERED = The Object deals double damage.
+        // 
+        // VULNERABLE = The Object takes double damage.
+        // 
+        // PROTECTED = The Object takes half damage.
+        // 
+        // POISONED = The Object heals half health.
+        // 
+        // BLESSED = The Object heals twice as much.
+        // 
+        
+        [Flags]
+        public enum STATUS
+        {
+            ALIVE = 1,
+            DEAD = 2,
+            STUNNED = 4,
+            WEAKEND = 8,
+            EMPOWERED = 16,
+            VULNERABLE = 32,
+            PROTECTED = 64,
+            POISONED = 128,
+            BLESSED = 256
+        }
+	// Interface Invariant:
+        //     The outgoing damage of the dealDamage method is never below
+        //     MIN_OUTGOING_DAMAGE.
+
+        // Constructor.
+        // 
+        // See the Docuementation for recinarnateHero(). 
+        public PlayerCharacter(int maxHP, int atk, int def)
+        {
+            state = 0;
+            recinarnateHero(maxHP, atk, def);
+        }
+
+
+        // The Object "deals damage".
+        // 
+        // The Object "deals damage" by returning an integer.
+        // This function is meant to abstract the idea 
+        // of the Object attacking something.
+        // 
+        // It does this by dealing damage equal to its attack.
+        // 
+        // If the Object is DEAD, it deals 0 damage.
+        // If the Object is STUNNED, it deals 0 damage.
+        // 
+        // Then, if the Object is neither DEAD nor STUNNED, it does
+        // the following:
+        // If the Object is EMPOWERED, it deals double damage.
+        // If the Object is WEAKENED, it deals half damage.
+        // 
+        // It then deals damage that is at least as much
+        // as MIN_OUTGOING_DAMAGE.
+        // 
+        
+        public int dealDamage()
+        {
+            if ((state & STATUS.DEAD) > 0) return 0;
+            if ((state & STATUS.STUNNED) > 0) return 0;
+            int damageDealt = attack;
+
+            if ((state & STATUS.EMPOWERED) > 0) damageDealt *= 2;
+            if ((state & STATUS.WEAKEND) > 0) damageDealt /= 2;
+
+            return max(MIN_OUTGOING_DAMAGE, attack);
+        }
+
+
+        // Damages the Object.
+        //
+        // incomingDamage - The amount of incoming damage.
+        //
+        // Damages the Object by the following formula:
+        // effective damage = incoming damage / defense of the object
+        //
+        // If the Object is VULNERABLE, the effective damage is doubled.
+        // If the Object is PROTECTED, the effective damage is halved.
+        //
+        // Returns effective damage taken.
+        //
+        // Preconditions:
+        //    The value of incomingDamage should be 1 or greater.
+        //
+        //    The value of incomingDamage should not be so largely negative
+        //    that it causes integer overflow.
+        //
+        // Postconditions:
+        //    If the Object's health points are less
+        //    than or equal to 0 after the heal, the Object
+        //    has all other States removed,
+        //    and its State becomes DEAD.
+        //
+        
+        public int takeDamage(int incomingDamage)
+        {
+            int effectiveDefense = max(MIN_EFFECTIVE_DEFENSE, defense);
+            int damageTaken = incomingDamage / effectiveDefense;
+
+            if ((state & STATUS.VULNERABLE) > 0) damageTaken *= 2;
+            if ((state & STATUS.PROTECTED) > 0) damageTaken /= 2;
+
+            healthPoints -= damageTaken;
+
+            if (healthPoints <= 0) state = STATUS.DEAD;
+
+            return damageTaken;
+
+        }
+
+
+        // Heals the Object.
+        // 
+        // heal - The amount of healing to grant the hero.
+        // 
+        // Heals the Object by the given amount.
+        // If the Object is BLESSED, the healing is doubled.
+        // If the Object is POISONED, the healing is halved.
+        // 
+        // Returns the effective amount healed.
+        // 
+        // Preconditions: 
+        //     The value of heal should be 1 or greater.
+        //     
+        //     The value of heal should not be so large
+        //     that it causes integer overflow.
+        // 
+        // Postcondition: 
+        //     If the Object's health points are greater
+        //     than 0 after the heal, the Object
+        //     has the DEAD State removed,
+        //     and the ALIVE State added.
+        // 
+             
+        public int healHero(int heal)
+        {
+            int healReceived = heal;
+
+            if ((state & STATUS.BLESSED) > 0) healReceived *= 2;
+            if ((state & STATUS.POISONED) > 0) healReceived /= 2;
+
+            healthPoints += healReceived;
+            healthPoints = min(maxHealthPoints, healthPoints);
+
+            if (healthPoints > 0)
+            {
+                state &= ~STATUS.DEAD;
+                state |= STATUS.ALIVE;
+            }
+
+            return healReceived;
+        }
+
+
+        // Places a new status on the Object.
+        // 
+        // incomingStatus - The new Status to place onto the Object. You may
+        //                     place negations to remove Status Effects
+        //                     (such as ~STUNNED to remove STUNNED).
+        // 
+        // Preconditions: 
+        //     Put any valid valid combination STATUSes and their negations,
+        //     BUT DO NOT INPUT THE FOLLOWING STATUSES
+        //     IN ANY COMBINATION OF ANY INPUT: ALIVE, ~ALIVE, DEAD, and ~DEAD.
+        // 
+        // Postconditions:
+        //     The Object's State is changed based upon the input
+        //     of this function.
+        public STATUS changeHeroStatus(STATUS incomingSTATUS)
+        {
+            state |= incomingSTATUS;
+            return state;
+        }
+
+        // Reincarnates a Hero Object into a new new default state.
+        // 
+        // maxHP - The maximum and starting health of the Object.
+        // atk - The new attack power of the Object.
+        // def - The new defense power of the Object.
+        // 
+        // Returns the previous State of the Object.
+        // 
+        // Preconditions: 
+        //     maxHP should be a number between 10000-100000
+        //     atk should be a number between 1000-10000.
+        //     def should be a number 100-1000.
+        // 
+        // Postconditions: 
+        //     The State of the Object is now ALIVE.
+        //     The values of maxHealthPoints and healthPoints are now at maxHP.
+        //     The value of attack is now atk.
+        //     The value of defense is now def. 
+        public STATUS recinarnateHero(int maxHP, int atk, int def)
+        {
+            STATUS previousState = this.state;
+            this.state = STATUS.ALIVE;
+            this.maxHealthPoints = maxHP;
+            this.healthPoints = maxHP;
+            this.attack = atk;
+            this.defense = def;
+            return previousState;
+        }
+
+        // Getters for health, max health, and the State of the Object.
+        public int getCurrentHealth() { return healthPoints; }
+        public int getmaxHealth() { return maxHealthPoints; }
+        public STATUS getState() { return state; }
+
+        // Private mathematical helper functions.
+        private int max(int a, int b) { return (a >= b) ? a : b; }
+        private int min(int a, int b) { return (a <= b) ? a : b; }
+
+	// Implementation Invariant: 
+        //    The effective defense of this Object is never below
+        //    MIN_EFFECTIVE_DEFENSE for the purposes of 
+        //    calculating incoming damage.
+    }
+}
