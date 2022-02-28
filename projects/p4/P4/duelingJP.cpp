@@ -45,7 +45,7 @@ int duelingJP::query(bool isCollision) const {
     for (unsigned i = 0; i < size - 1; i++) {
         if (!group[i].isActive()) group[i].revive();
         int up = group[i].up();
-        for (int j = i + 1; j < size; j++) {
+        for (unsigned j = i + 1; j < size; j++) {
             if (!group[j].isActive()) group[j].revive();
             if (isCollision && up == group[j].up()) count++;
             if (!isCollision && up == group[j].down()) count++;
