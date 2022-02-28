@@ -133,8 +133,8 @@ public:
     const duelingJP& operator+=(const jumpPrime &);
 
 private:
-    jumpPrime* group;           // Array to hold the jumpPrime objects
     unsigned size;              // Hold number of jumpPrime objects
+    jumpPrime* group;           // Array to hold the jumpPrime objects
 
     // Use with move constructor and move overloaded = operator
     // to move heap data to the new container and nullify source data

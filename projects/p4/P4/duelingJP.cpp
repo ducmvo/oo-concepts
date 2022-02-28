@@ -42,7 +42,7 @@ const duelingJP &duelingJP::operator=(duelingJP &&src){
 int duelingJP::query(bool isCollision) const {
     if (group == nullptr) return -1;
     int count = 0;
-    for (int i = 0; i < size - 1; i++) {
+    for (unsigned i = 0; i < size - 1; i++) {
         if (!group[i].isActive()) group[i].revive();
         int up = group[i].up();
         for (int j = i + 1; j < size; j++) {
@@ -65,7 +65,7 @@ int duelingJP::getInversions() const {
 void duelingJP::createDueling(unsigned size, int values[]) {
     this->size = size;
     group = new jumpPrime[size];
-    for (int i = 0; i < size; i++) {
+    for (unsigned i = 0; i < size; i++) {
         jumpPrime jp(values[i]);
         group[i] = jp;
     }
@@ -75,7 +75,7 @@ void duelingJP::copySource(const duelingJP &src) {
     size = src.size;
     delete [] group;
     group = new jumpPrime[size];
-    for (int i = 0; i < size; i++) {
+    for (unsigned i = 0; i < size; i++) {
         group[i] = src.group[i];
     }
 }
@@ -91,7 +91,7 @@ void duelingJP::moveSource(duelingJP &src) {
 
 bool duelingJP::operator==(const duelingJP &src) {
     if (size != src.size) return false;
-    for (int i = 0; i < size; i++)
+    for (unsigned i = 0; i < size; i++)
         if(group[i] != src.group[i])
             return false;
     return true;
@@ -107,9 +107,9 @@ const duelingJP duelingJP::operator+(const duelingJP &src) {
     duelingJP local;
     local.size = newSize;
     local.group = new jumpPrime[newSize];
-    for (int i = 0; i < size; i++)
+    for (unsigned i = 0; i < size; i++)
         local.group[i] = group[i];
-    for (int i = 0; i < src.size; i++)
+    for (unsigned i = 0; i < src.size; i++)
         local.group[size + i] = src.group[i];
     return local;
 }
@@ -120,7 +120,7 @@ const duelingJP duelingJP::operator+(const jumpPrime &src) {
     int newSize = size + 1;
     local.size = newSize;
     local.group = new jumpPrime[newSize];
-    for (int i = 0; i < size; i++)
+    for (unsigned i = 0; i < size; i++)
         local.group[i] = group[i];
     local.group[size] = src;
     return local;
